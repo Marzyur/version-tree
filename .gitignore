@@ -1,5 +1,7 @@
-
+@"
 version-tree/
 __pycache__/
 *.pyc
 .pytest_cache/
+*.pyd
+"@ | Out-File -FilePath ".gitignore" -Encoding UTF8 -NoNewline
