@@ -11,7 +11,6 @@ A high-performance, zero-library implementation of a hierarchical version histor
 
 ## 🛠 Features
 ** Live Video Example **
-  ``` bash
    Uploading Screen Recording 2026-02-25 144126.mp4…
 
 
