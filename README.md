@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/9f7518e9-93c3-4d35-9a1c-28eb796ae01d
 # Version Tree Table Explorer
 
 A high-performance, zero-library implementation of a hierarchical version history table. [cite_start]This application translates a complex version tree into a linear, paginated tabular format similar to a Git commit history client[cite: 7, 12].
@@ -8,6 +10,10 @@ A high-performance, zero-library implementation of a hierarchical version histor
 ---
 
 ## 🛠 Features
+** Live Video Example **
+  ``` bash
+   Uploading Screen Recording 2026-02-25 144126.mp4…
+
 
 ### 1. Visual Version Tree
 * [cite_start]**Hierarchical Representation**: The first column uses custom-built connectors and indentation to show parent-child relationships[cite: 104, 105].
@@ -57,3 +63,9 @@ A high-performance, zero-library implementation of a hierarchical version histor
    ```bash
    git clone [https://github.com/your-username/version-tree-table.git](https://github.com/your-username/version-tree-table.git)
    cd version-tree-table
+2. ** Install requirements file **
+   ```bash
+   pip install -r requirements.txt
+3.**Run on Local**
+  ```bash
+   python -m uvicorn app.main:app --reload
