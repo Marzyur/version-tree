@@ -47,6 +47,10 @@ A high-performance, zero-library implementation of a hierarchical version histor
 
 ### Prerequisites
 * Python 3.9+
+* fastapi
+* uvicorn
+* pydantic
+
 
 ### Installation
 1. **Clone the repository**:
