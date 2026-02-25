@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from .models import Version, PageResponse
@@ -25,9 +25,24 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Serve static files (CSS, JS)
-static_dir = Path(__file__).parent.parent / "static"
-app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+# Resolve static directory — works locally and on Vercel
+def _find_static() -> Path:
+    candidates = [
+        Path(__file__).parent.parent / "static",   # local dev
+        Path("/var/task/static"),                    # Vercel serverless
+    ]
+    for p in candidates:
+        if p.exists():
+            return p
+    raise RuntimeError("Cannot find static directory")
+
+static_dir = _find_static()
+
+# Mount for local dev; on Vercel static files are served via explicit routes below
+try:
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+except Exception:
+    pass  # Vercel may not support StaticFiles mount — fallback routes handle it
 
 # ── In-memory store (swap for DB later) ─────────────────────────────
 _versions: list[Version] = []
@@ -74,8 +89,21 @@ _load_sample_data()
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_frontend():
-    html_path = Path(__file__).parent.parent / "static" / "index.html"
+    html_path = static_dir / "index.html"
     return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
+
+
+@app.get("/static/css/styles.css", include_in_schema=False)
+async def serve_css():
+    content = (static_dir / "css" / "styles.css").read_text(encoding="utf-8")
+    return Response(content=content, media_type="text/css")
+
+
+@app.get("/static/js/app.js", include_in_schema=False)
+async def serve_js():
+    content = (static_dir / "js" / "app.js").read_text(encoding="utf-8")
+    return Response(content=content, media_type="application/javascript")
+
 
 @app.get("/versions", response_model=PageResponse, summary="Get paginated version tree")
 async def get_versions(
@@ -91,11 +119,6 @@ async def get_versions(
         raise HTTPException(500, "Tree not initialised")
 
     page_nodes, total_pages = _builder.get_page(_linearized, page, PAGE_SIZE)
-    highlighted=[]
-    if selected:
-        target=next((n for n in _linearized if n.version.id==selected),None)
-        if target:
-            highlighted=[selected]+target.ancestors
 
     return PageResponse(
         page=page,
@@ -103,9 +126,6 @@ async def get_versions(
         total_nodes=len(_linearized),
         total_pages=total_pages,
         nodes=page_nodes,
-        selected_id=selected,
-        highlighted_ids=highlighted
-
     )
 
 
