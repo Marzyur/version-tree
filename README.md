@@ -60,4 +60,6 @@ A high-performance, zero-library implementation of a hierarchical version histor
 2. ** Install requirements file **
    ```bash
    pip install -r requirements.txt
-   
+3.**Run on Local**
+  ```bash
+   python -m uvicorn app.main:app --reload
