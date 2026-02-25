@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Version Tree Viewer</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>🌿 Version Tree</h1>
+    <span id="meta">Loading…</span>
+  </header>
+
+  <main>
+    <div class="table-wrapper">
+      <table id="version-table">
+        <thead>
+          <tr>
+            <th class="col-tree">Version Tree</th>
+            <th class="col-name">Version Name</th>
+            <th class="col-desc">Description</th>
+            <th class="col-type">Type</th>
+            <th class="col-author">Submitted By</th>
+            <th class="col-date">Created On</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <nav id="pagination">
+      <button id="btn-prev" disabled>← Prev</button>
+      <span id="page-indicator">Page 1</span>
+      <button id="btn-next" disabled>Next →</button>
+    </nav>
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

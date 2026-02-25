@@ -1,0 +1,175 @@
+/* ── Reset & Base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:           #0f1117;
+  --surface:      #1a1d27;
+  --border:       #2e3148;
+  --accent:       #6c63ff;
+  --accent-dim:   rgba(108, 99, 255, 0.12);
+  --ancestor-bg:  rgba(108, 99, 255, 0.07);
+  --ancestor-line:#6c63ff44;
+  --selected-bg:  rgba(108, 99, 255, 0.22);
+  --text:         #e2e4f0;
+  --text-muted:   #7b7f9e;
+  --connector:    #4a4e6e;
+  --tag-release:  #3ddc97;
+  --tag-branch:   #f7c948;
+  --tag-version:  #6c9eff;
+  --radius:       6px;
+  --font-mono:    "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  --font-ui:      "Inter", system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.02em; }
+#meta { color: var(--text-muted); font-size: 0.82rem; margin-left: auto; }
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+main { flex: 1; display: flex; flex-direction: column; padding: 1.5rem; gap: 1rem; }
+
+.table-wrapper { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+
+/* ── Table ───────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; }
+
+thead tr { background: var(--surface); }
+th {
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.col-tree   { width: 22%; }
+.col-name   { width: 18%; }
+.col-desc   { width: 25%; }
+.col-type   { width: 10%; }
+.col-author { width: 12%; }
+.col-date   { width: 13%; }
+
+/* ── Rows ────────────────────────────────────────────────────────── */
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--accent-dim); }
+
+tbody tr.selected  { background: var(--selected-bg); }
+tbody tr.ancestor  { background: var(--ancestor-bg); }
+
+td { padding: 0.6rem 1rem; vertical-align: middle; }
+
+/* ── Tree cell ───────────────────────────────────────────────────── */
+.cell-tree {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.connector {
+  color: var(--connector);
+  user-select: none;
+  letter-spacing: -0.05em;
+}
+
+/* Ancestor path connectors get accent colour */
+tr.selected  .connector,
+tr.ancestor  .connector { color: var(--accent); }
+
+.node-dot {
+  color: var(--text-muted);
+  margin-right: 0.5rem;
+}
+
+tr.selected .node-dot { color: var(--accent); }
+tr.ancestor .node-dot { color: var(--accent); opacity: 0.6; }
+
+.node-name {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+tr.selected .node-name { color: #fff; }
+
+/* ── Type badge ──────────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: capitalize;
+}
+.badge-release { background: rgba(61,220,151,.15); color: var(--tag-release); }
+.badge-branch  { background: rgba(247,201,72,.13); color: var(--tag-branch); }
+.badge-trunk   { background: rgba(108,158,255,.13); color: var(--tag-version); }
+.badge-default { background: rgba(255,255,255,.07); color: var(--text-muted); }
+
+/* ── Author & Date ───────────────────────────────────────────────── */
+.cell-author { color: var(--text-muted); font-size: 0.85rem; }
+.cell-date   { color: var(--text-muted); font-size: 0.82rem; font-family: var(--font-mono); }
+
+/* ── Pagination ──────────────────────────────────────────────────── */
+#pagination {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+#pagination button {
+  padding: 0.45rem 1.1rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+#pagination button:hover:not(:disabled) {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+}
+#pagination button:disabled { opacity: 0.35; cursor: not-allowed; }
+#page-indicator { color: var(--text-muted); font-size: 0.85rem; min-width: 80px; text-align: center; }
+
+/* ── Loading state ───────────────────────────────────────────────── */
+.loading-row td {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+  font-size: 0.85rem;
+}
