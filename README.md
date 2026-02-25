@@ -54,6 +54,9 @@ A high-performance, zero-library implementation of a hierarchical version histor
 
 ### Installation
 1. **Clone the repository**:
-   ```bash
+   
    git clone [https://github.com/your-username/version-tree-table.git](https://github.com/your-username/version-tree-table.git)
    cd version-tree-table
+2. ** Install requirements file **
+   pip install -r requirements.txt
+   
