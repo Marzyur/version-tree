@@ -82,7 +82,30 @@ tbody tr:hover { background: var(--accent-dim); }
 
 tbody tr.selected  { background: var(--selected-bg); }
 tbody tr.ancestor  { background: var(--ancestor-bg); }
+/* styles.css */
 
+/* Highlight the specific tree lines and dots in the ancestral path */
+tr.ancestor .connector, 
+tr.ancestor .node-dot {
+    color: var(--accent) !important;
+    font-weight: bold;
+    opacity: 1;
+    /* Subtle glow effect for the path */
+    text-shadow: 0 0 8px var(--accent); 
+}
+
+/* Specific styling for the selected node's dot */
+tr.selected .node-dot {
+    color: #fff !important;
+    text-shadow: 0 0 12px var(--accent);
+}
+
+
+
+tr.selected {
+    background-color: var(--selected-bg);
+    border-left: 2px solid var(--accent);
+}
 td { padding: 0.6rem 1rem; vertical-align: middle; }
 
 /* ── Tree cell ───────────────────────────────────────────────────── */

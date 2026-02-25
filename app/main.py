@@ -105,20 +105,25 @@ async def serve_js():
     return Response(content=content, media_type="application/javascript")
 
 
-@app.get("/versions", response_model=PageResponse, summary="Get paginated version tree")
+# main.py
+
+@app.get("/versions", response_model=PageResponse,summary="Get paginated version tree ")
 async def get_versions(
-    page: int = Query(default=1, ge=1, description="Page number (1-based)"),
-    selected: Optional[str] = Query(default=None, description="Currently selected node ID"),
+    page: int = Query(default=1, ge=1),
+    selected: Optional[str] = Query(default=None),
 ):
-    """
-    Returns a paginated slice of the linearized DFS version tree.
-    Each node includes its connector tokens and ancestor IDs for
-    client-side ancestry highlighting.
-    """
     if _linearized is None:
-        raise HTTPException(500, "Tree not initialised")
+        raise HTTPException(500, "Tree not initialized")
 
     page_nodes, total_pages = _builder.get_page(_linearized, page, PAGE_SIZE)
+
+    highlighted = []
+    if selected:
+        # Use the pre-cached linearized list to find ancestors
+        target = next((n for n in _linearized if n.version.id == selected), None)
+        if target:
+            # Path = selected node + its parent chain
+            highlighted = [selected] + target.ancestors
 
     return PageResponse(
         page=page,
@@ -126,6 +131,8 @@ async def get_versions(
         total_nodes=len(_linearized),
         total_pages=total_pages,
         nodes=page_nodes,
+        selected_id=selected,
+        highlighted_ids=highlighted
     )
 
 
